@@ -1,4 +1,37 @@
-plistifier-rails3
-=================
+= plistifier-rails3
 
-A Rails 3 initializer that enables rendering of binary plists from your controllers.
+Rough pass at a Rails 3 initializer that enables rendering plists from controllers.
+This code was borrowed and heavily modified from jeena's original plistifier plugin
+for Rails 2 (see http://github.com/jeena/plistifier).
+
+== Installation
+
+This initializer relies on CFPropertyList so make sure you add the gem to your Gemfile
+before copying plistifier.rb into config/initializers. CFPropertyList provides the
+#to_plist method that this initializer attempts to call on your data.
+
+== Usage
+
+Your ActiveRecord models will also need #to_hash methods defined on them. These hashes
+should contain the name/value pairs to include in the plist. For example:
+
+  class User < ActiveRecord::Base
+    def to_hash
+      { "firstName" => first_name, "lastName" => last_name }
+    end
+  end
+
+And here's an example of how to render a plist from a controller:
+
+  class ApiController < ApplicationController
+    def get_users
+      users = User.all
+      render :plist => users
+    end
+  end
+
+== Resources
+
+Repository: http://github.com/pelargir/plistifier-rails3/
+Blog: http://matthewbass.com
+Author: Matthew Bass
